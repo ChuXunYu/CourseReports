@@ -3,3 +3,7 @@ target/
 *.tmp
 .idea/
 .vscode/
+_docx_review*/
+_report_assets/
+_report_text.txt
+report_screenshots/
