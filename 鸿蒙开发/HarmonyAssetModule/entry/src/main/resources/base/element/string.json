@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "教学设备资产管理鸿蒙模块"
+    },
+    {
+      "name": "entry_desc",
+      "value": "资产台账入口"
+    },
+    {
+      "name": "app_name",
+      "value": "资产管理"
+    }
+  ]
+}

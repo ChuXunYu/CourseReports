@@ -1,0 +1,10 @@
+{
+  "modelVersion": "5.0.0",
+  "name": "harmony-asset-module",
+  "version": "1.0.0",
+  "description": "HarmonyOS asset management module for course report",
+  "main": "",
+  "author": "training",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}
