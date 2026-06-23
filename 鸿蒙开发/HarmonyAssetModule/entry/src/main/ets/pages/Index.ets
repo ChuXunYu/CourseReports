@@ -1,12 +1,17 @@
 import router from '@ohos.router';
-import { AssetItem, AssetStatusMapper, assetSeedData } from '../common/AssetModel';
+import { AssetItem, AssetStatusMapper, buildAssetSummary } from '../common/AssetModel';
+import { AssetStore } from '../common/AssetStore';
 
 @Entry
 @Component
 struct Index {
   @State keyword: string = '';
   @State selectedStatus: string = 'ALL';
-  private assets: AssetItem[] = assetSeedData;
+  @State assets: AssetItem[] = AssetStore.list();
+
+  aboutToAppear() {
+    this.assets = AssetStore.list();
+  }
 
   private get filteredAssets(): AssetItem[] {
     return this.assets.filter((item: AssetItem) => {
@@ -24,17 +29,23 @@ struct Index {
     Navigation() {
       Column({ space: 18 }) {
         this.HeaderSummary()
+        this.AddAssetEntry()
+        this.WidgetEntry()
         this.SearchPanel()
         this.StatusFilter()
-        List({ space: 12 }) {
-          ForEach(this.filteredAssets, (asset: AssetItem) => {
-            ListItem() {
-              this.AssetCard(asset)
-            }
-          }, (asset: AssetItem) => asset.assetCode)
+        if (this.filteredAssets.length > 0) {
+          List({ space: 12 }) {
+            ForEach(this.filteredAssets, (asset: AssetItem) => {
+              ListItem() {
+                this.AssetCard(asset)
+              }
+            }, (asset: AssetItem) => asset.assetCode)
+          }
+          .layoutWeight(1)
+          .scrollBar(BarState.Off)
+        } else {
+          this.EmptyState()
         }
-        .layoutWeight(1)
-        .scrollBar(BarState.Off)
       }
       .width('100%')
       .height('100%')
@@ -43,6 +54,24 @@ struct Index {
     }
     .title('教学设备资产')
     .mode(NavigationMode.Stack)
+  }
+
+  @Builder
+  AddAssetEntry() {
+    Button('新增设备')
+      .width('100%')
+      .height(44)
+      .fontSize(16)
+      .fontColor('#FFFFFF')
+      .backgroundColor('#1C6F63')
+      .borderRadius(14)
+      .onClick(() => {
+        this.keyword = '';
+        this.selectedStatus = 'ALL';
+        router.pushUrl({
+          url: 'pages/AddAsset'
+        });
+      })
   }
 
   @Builder
@@ -62,11 +91,11 @@ struct Index {
       .layoutWeight(1)
 
       Column() {
-        Text(`${this.filteredAssets.length}`)
+        Text(`${buildAssetSummary(this.assets).totalCount}`)
           .fontSize(28)
           .fontWeight(FontWeight.Bold)
           .fontColor('#FFFFFF')
-        Text('条记录')
+        Text('总资产')
           .fontSize(12)
           .fontColor('#DFF3EF')
       }
@@ -78,6 +107,48 @@ struct Index {
       .borderRadius(18)
     }
     .width('100%')
+  }
+
+  @Builder
+  WidgetEntry() {
+    Column({ space: 10 }) {
+      Column({ space: 4 }) {
+        Text('万能卡片 / 元服务预览')
+          .fontSize(16)
+          .fontWeight(FontWeight.Bold)
+          .fontColor('#17212B')
+        Text(`维修中 ${buildAssetSummary(this.assets).repairCount} 台 · 在库 ${buildAssetSummary(this.assets).inStockCount} 台`)
+          .fontSize(12)
+          .fontColor('#66727F')
+      }
+      .alignItems(HorizontalAlign.Start)
+      .width('100%')
+
+      Button('万能卡片 / 元服务预览')
+        .width('100%')
+        .height(40)
+        .fontSize(14)
+        .fontWeight(FontWeight.Medium)
+        .fontColor('#FFFFFF')
+        .backgroundColor('#1C6F63')
+        .borderRadius(18)
+        .onClick(() => {
+          router.pushUrl({
+            url: 'pages/WidgetDesign'
+          });
+        })
+    }
+    .width('100%')
+    .padding(14)
+    .alignItems(HorizontalAlign.Start)
+    .backgroundColor('#FFFFFF')
+    .borderRadius(16)
+    .shadow({ radius: 10, color: '#10000000', offsetY: 3 })
+    .onClick(() => {
+      router.pushUrl({
+        url: 'pages/WidgetDesign'
+      });
+    })
   }
 
   @Builder
@@ -119,6 +190,39 @@ struct Index {
       .onClick(() => {
         this.selectedStatus = value;
       })
+  }
+
+  @Builder
+  EmptyState() {
+    Column({ space: 10 }) {
+      Text('暂无匹配设备')
+        .fontSize(18)
+        .fontWeight(FontWeight.Bold)
+        .fontColor('#17212B')
+      Text('请清空搜索条件，或点击新增设备录入资产')
+        .fontSize(13)
+        .fontColor('#66727F')
+      Button('新增设备')
+        .width('100%')
+        .height(42)
+        .fontSize(15)
+        .fontColor('#FFFFFF')
+        .backgroundColor('#1C6F63')
+        .borderRadius(14)
+        .onClick(() => {
+          this.keyword = '';
+          this.selectedStatus = 'ALL';
+          router.pushUrl({
+            url: 'pages/AddAsset'
+          });
+        })
+    }
+    .width('100%')
+    .layoutWeight(1)
+    .justifyContent(FlexAlign.Center)
+    .padding(18)
+    .backgroundColor('#FFFFFF')
+    .borderRadius(16)
   }
 
   @Builder

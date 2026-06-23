@@ -13,6 +13,15 @@ export interface AssetItem {
   remark: string;
 }
 
+export interface AssetSummary {
+  totalCount: number;
+  inStockCount: number;
+  inUseCount: number;
+  repairCount: number;
+  scrappedCount: number;
+  totalValue: number;
+}
+
 export class AssetStatusMapper {
   static label(status: AssetStatus): string {
     const labels: Record<AssetStatus, string> = {
@@ -23,6 +32,32 @@ export class AssetStatusMapper {
     };
     return labels[status];
   }
+}
+
+export function buildAssetSummary(assets: AssetItem[]): AssetSummary {
+  const summary: AssetSummary = {
+    totalCount: assets.length,
+    inStockCount: 0,
+    inUseCount: 0,
+    repairCount: 0,
+    scrappedCount: 0,
+    totalValue: 0
+  };
+
+  assets.forEach((asset: AssetItem) => {
+    summary.totalValue += asset.originalValue;
+    if (asset.status === 'IN_STOCK') {
+      summary.inStockCount += 1;
+    } else if (asset.status === 'IN_USE') {
+      summary.inUseCount += 1;
+    } else if (asset.status === 'REPAIR') {
+      summary.repairCount += 1;
+    } else if (asset.status === 'SCRAPPED') {
+      summary.scrappedCount += 1;
+    }
+  });
+
+  return summary;
 }
 
 export const assetSeedData: AssetItem[] = [

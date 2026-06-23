@@ -11,6 +11,14 @@
     {
       "name": "app_name",
       "value": "资产管理"
+    },
+    {
+      "name": "asset_card_name",
+      "value": "资产台账卡片"
+    },
+    {
+      "name": "asset_card_desc",
+      "value": "展示教学设备资产总数、维修中和在库数量"
     }
   ]
 }

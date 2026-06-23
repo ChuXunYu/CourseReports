@@ -22,6 +22,21 @@
         "startWindowIcon": "$media:app_icon",
         "startWindowBackground": "$color:start_window_background"
       }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "AssetCardFormAbility",
+        "srcEntry": "./ets/formability/AssetCardFormAbility.ets",
+        "label": "$string:asset_card_name",
+        "description": "$string:asset_card_desc",
+        "type": "form",
+        "metadata": [
+          {
+            "name": "ohos.extension.form",
+            "resource": "$profile:form_config"
+          }
+        ]
+      }
     ]
   }
 }

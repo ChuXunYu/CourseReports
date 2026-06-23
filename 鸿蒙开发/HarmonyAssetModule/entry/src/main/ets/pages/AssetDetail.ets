@@ -1,5 +1,6 @@
 import router from '@ohos.router';
 import { AssetItem, AssetStatusMapper } from '../common/AssetModel';
+import { AssetStore } from '../common/AssetStore';
 
 @Entry
 @Component
@@ -41,7 +42,11 @@ struct AssetDetail {
           .backgroundColor('#1C6F63')
           .borderRadius(14)
           .onClick(() => {
-            this.statusLabel = '使用中';
+            const result = AssetStore.updateStatus(this.asset.assetCode, 'IN_USE');
+            if (result.success) {
+              this.asset.status = 'IN_USE';
+              this.statusLabel = AssetStatusMapper.label('IN_USE');
+            }
           })
 
         Button('返回资产列表')
